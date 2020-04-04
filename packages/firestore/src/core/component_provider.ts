@@ -197,10 +197,10 @@ export class IndexedDbComponentProvider extends ComponentProvider {
       maxConcurrentLimboResolutions
     );
     this.eventManager = new EventManager(this.syncEngine);
-    
+
     this.remoteStore.syncEngine = this.syncEngine;
     this.sharedClientState.syncEngine = this.syncEngine;
-    
+
     await this.sharedClientState.start();
     await this.remoteStore.start();
     await this.localStore.start();
