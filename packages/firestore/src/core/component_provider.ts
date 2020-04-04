@@ -49,13 +49,13 @@ import {
  * invoke initialize() once before accessing any of the individual components.
  */
 export abstract class ComponentProvider {
-  protected persistence!: Persistence;
-  protected sharedClientState!: SharedClientState;
-  protected localStore!: LocalStore;
-  protected syncEngine!: SyncEngine;
-  protected gcScheduler!: GarbageCollectionScheduler | null;
-  protected remoteStore!: RemoteStore;
-  protected eventManager!: EventManager;
+  protected persistence?: Persistence;
+  protected sharedClientState?: SharedClientState;
+  protected localStore?: LocalStore;
+  protected syncEngine?: SyncEngine;
+  protected gcScheduler?: GarbageCollectionScheduler | null;
+  protected remoteStore?: RemoteStore;
+  protected eventManager?: EventManager;
 
   abstract initialize(
     asyncQueue: AsyncQueue,
@@ -110,10 +110,10 @@ export abstract class ComponentProvider {
  * Provides all components needed for Firestore with IndexedDB persistence.
  */
 export class IndexedDbComponentProvider extends ComponentProvider {
-  protected persistence!: IndexedDbPersistence;
-  protected localStore!: MultiTabLocalStore;
-  protected syncEngine!: MultiTabSyncEngine;
-  protected gcScheduler!: GarbageCollectionScheduler;
+  protected persistence?: IndexedDbPersistence;
+  protected localStore?: MultiTabLocalStore;
+  protected syncEngine?: MultiTabSyncEngine;
+  protected gcScheduler?: GarbageCollectionScheduler;
 
   async initialize(
     asyncQueue: AsyncQueue,
@@ -153,7 +153,7 @@ export class IndexedDbComponentProvider extends ComponentProvider {
         )
       : new MemorySharedClientState();
     this.sharedClientState.onlineStateHandler = onlineState =>
-      this.syncEngine.applyOnlineStateChange(
+      this.syncEngine!.applyOnlineStateChange(
         onlineState,
         OnlineStateSource.SharedClientState
       );
@@ -183,7 +183,7 @@ export class IndexedDbComponentProvider extends ComponentProvider {
       datastore,
       asyncQueue,
       onlineState =>
-        this.syncEngine.applyOnlineStateChange(
+        this.syncEngine!.applyOnlineStateChange(
           onlineState,
           OnlineStateSource.RemoteStore
         ),
@@ -207,12 +207,12 @@ export class IndexedDbComponentProvider extends ComponentProvider {
 
     // NOTE: This will immediately call the listener, so we make sure to
     // set it after localStore / remoteStore are started.
-    await this.persistence!.setPrimaryStateListener(async isPrimary => {
-      await this.syncEngine.applyPrimaryState(isPrimary);
-      if (isPrimary && !this.gcScheduler.started) {
-        this.gcScheduler.start(this.localStore);
+    await this.persistence.setPrimaryStateListener(async isPrimary => {
+      await this.syncEngine!.applyPrimaryState(isPrimary);
+      if (isPrimary && !this.gcScheduler!.started) {
+        this.gcScheduler!.start(this.localStore!);
       } else if (!isPrimary) {
-        this.gcScheduler.stop();
+        this.gcScheduler!.stop();
       }
     });
   }
@@ -269,7 +269,7 @@ export class MemoryComponentProvider extends ComponentProvider {
       datastore,
       asyncQueue,
       onlineState =>
-        this.syncEngine.applyOnlineStateChange(
+        this.syncEngine!.applyOnlineStateChange(
           onlineState,
           OnlineStateSource.RemoteStore
         ),
