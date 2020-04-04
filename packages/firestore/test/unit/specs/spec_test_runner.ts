@@ -23,7 +23,7 @@ import {
   IndexedDbComponentProvider,
   MemoryComponentProvider
 } from '../../../src/core/component_provider';
-import { DatabaseId, DatabaseInfo } from '../../../src/core/database_info';
+import { DatabaseInfo } from '../../../src/core/database_info';
 import {
   EventManager,
   Observer,
