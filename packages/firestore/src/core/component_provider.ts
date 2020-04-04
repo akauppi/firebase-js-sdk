@@ -107,7 +107,7 @@ export abstract class ComponentProvider {
 }
 
 /**
- * Provides all components needed for Firestore with IndexedDb persistence.
+ * Provides all components needed for Firestore with IndexedDB persistence.
  */
 export class IndexedDbComponentProvider extends ComponentProvider {
   protected persistence!: IndexedDbPersistence;
@@ -135,7 +135,6 @@ export class IndexedDbComponentProvider extends ComponentProvider {
       databaseInfo
     );
 
-    // Opt to use proto3 JSON in case the platform doesn't support Uint8Array.
     const serializer = platform.newSerializer(databaseInfo.databaseId);
     if (!WebStorageSharedClientState.isAvailable(platform)) {
       throw new FirestoreError(
@@ -179,7 +178,6 @@ export class IndexedDbComponentProvider extends ComponentProvider {
       new IndexFreeQueryEngine(),
       initialUser
     );
-
     this.remoteStore = new RemoteStore(
       this.localStore,
       datastore,
@@ -191,7 +189,6 @@ export class IndexedDbComponentProvider extends ComponentProvider {
         ),
       platform.newConnectivityMonitor()
     );
-
     this.syncEngine = new MultiTabSyncEngine(
       this.localStore,
       this.remoteStore,
@@ -199,11 +196,11 @@ export class IndexedDbComponentProvider extends ComponentProvider {
       initialUser,
       maxConcurrentLimboResolutions
     );
+    this.eventManager = new EventManager(this.syncEngine);
+    
     this.remoteStore.syncEngine = this.syncEngine;
     this.sharedClientState.syncEngine = this.syncEngine;
-
-    this.eventManager = new EventManager(this.syncEngine);
-
+    
     await this.sharedClientState.start();
     await this.remoteStore.start();
     await this.localStore.start();
