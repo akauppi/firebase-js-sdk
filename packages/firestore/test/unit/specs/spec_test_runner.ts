@@ -106,6 +106,8 @@ import { SharedFakeWebStorage, TestPlatform } from '../../util/test_platform';
 import {
   clearTestPersistence,
   INDEXEDDB_TEST_DATABASE_NAME,
+  TEST_DATABASE_ID,
+  TEST_PERSISTENCE_KEY,
   TEST_SERIALIZER
 } from '../local/persistence_test_helpers';
 import { MULTI_CLIENT_TAG } from './describe_spec';
@@ -439,8 +441,8 @@ abstract class TestRunner {
   ) {
     this.clientId = `client${clientIndex}`;
     this.databaseInfo = new DatabaseInfo(
-      new DatabaseId('project'),
-      'persistenceKey',
+      TEST_DATABASE_ID,
+      TEST_PERSISTENCE_KEY,
       'host',
       /*ssl=*/ false,
       /*forceLongPolling=*/ false
@@ -1295,8 +1297,6 @@ class IndexedDbTestRunner extends TestRunner {
     maxConcurrentLimboResolutions: number,
     gcEnabled: boolean
   ): Promise<ComponentProvider> {
-    assert(gcEnabled, 'IndexedDB persistence requires GC');
-
     const persistenceProvider = new IndexedDbComponentProvider();
     await persistenceProvider.initialize(
       asyncQueue,

@@ -59,11 +59,12 @@ export const MOCK_SEQUENCE_NUMBER_SYNCER: SequenceNumberSyncer = {
 
 /** The Database ID used by most tests that use a serializer. */
 export const TEST_DATABASE_ID = new DatabaseId('test-project');
+export const TEST_PERSISTENCE_KEY = '[PersistenceTestHelpers]';
 
 /** The DatabaseInfo used by tests that need a serializer. */
 const TEST_DATABASE_INFO = new DatabaseInfo(
   TEST_DATABASE_ID,
-  '[PersistenceTestHelpers]',
+  TEST_PERSISTENCE_KEY,
   'host',
   /*ssl=*/ false,
   /*forceLongPolling=*/ false
